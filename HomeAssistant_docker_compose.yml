@@ -1,6 +1,6 @@
 services:
   x-homeassistant:
-    container_name: homeassistant_v3
+    container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     volumes:
@@ -11,7 +11,7 @@ services:
     network_mode: host
 
   x-esphome:
-    container_name: esphome_v3
+    container_name: esphome
     image: ghcr.io/esphome/esphome:stable
     restart: always
     privileged: true
