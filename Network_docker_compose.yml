@@ -8,6 +8,7 @@ services:
     ports:
       - "80:80"     # HTTP entrypoint
       - "443:443"   # HTTPS entrypoint
+      - "8080:8080" # I think this is the dashboard??
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro # Allows Traefik to auto-discover containers
       - /opt/traefik/config:/etc/traefik                  # Stores Traefik dynamic configs if needed
