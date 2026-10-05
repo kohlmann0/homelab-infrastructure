@@ -14,9 +14,9 @@ services:
       - "traefik.http.routers.ha.rule=Host(`ha.homelab.iot`)"
       - "traefik.http.routers.ha.entrypoints=web"
       - "traefik.http.routers.ha.service=ha"
-      - "traefik.http.services.ha.loadbalancer.server.url=http://host.docker.internal:8123"
+      #- "traefik.http.services.ha.loadbalancer.server.url=http://host.docker.internal:8123"
       - "traefik.http.services.ha.loadbalancer.server.port=8123"
-      #- "traefik.http.services.ha.loadbalancer.server.url=http://192.168.20.30:8123"
+      - "traefik.http.services.ha.loadbalancer.server.url=http://192.168.20.130:8123"
 
   esphome:
     container_name: esphome
@@ -40,7 +40,7 @@ services:
       - "traefik.http.routers.esphome.entrypoints=web"
       - "traefik.http.routers.esphome.service=esphome"    
       # Backend            
-      - "traefik.http.services.ha.loadbalancer.server.url=http://host.docker.internal:6052"
+      #- "traefik.http.services.ha.loadbalancer.server.url=http://host.docker.internal:6052"
       - "traefik.http.services.esphome.loadbalancer.server.port=6052"
-      #- "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.30:6052"
+      - "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.30:6052"
 
