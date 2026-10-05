@@ -16,6 +16,9 @@ services:
       - "traefik.http.routers.ha.entrypoints=web"
       - "traefik.http.routers.ha.tls=true"
       - "traefik.http.services.ha.loadbalancer.server.port=8123"
+      # Because homeassistant uses Network_mode:Host -- Use the scheme and urls entries below instead      
+      - "traefik.http.services.hass.loadbalancer.server.scheme=http"
+      - "traefik.http.services.hass.loadbalancer.servers.url=http://192.168.20.30:8123"
 
   x-esphome:
     container_name: esphome
@@ -39,4 +42,7 @@ services:
       - "traefik.http.routers.esphome.entrypoints=web"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.services.esphome.loadbalancer.server.port=6052"
+      # Because esphome uses Network_mode:Host -- Use the scheme and urls entries below as well
+      - "traefik.http.services.esphome.loadbalancer.server.scheme=http"
+      - "traefik.http.services.esphome.loadbalancer.servers.url=http://192.168.20.30:6052"
 
