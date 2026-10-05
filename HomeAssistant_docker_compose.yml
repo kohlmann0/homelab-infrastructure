@@ -4,11 +4,22 @@ services:
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
     volumes:
-      - /opt/iot/homeassistant/config:/config
+      - /opt/homelab/homeassistant/config:/config
       - /run/dbus:/run/dbus:ro
       - /etc/localtime:/etc/localtime:ro
     privileged: true
     network_mode: host
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        - 172.16.0.0/12  # Standard Docker internal IP range
+    labels:
+      - "traefik.enable=true"
+      # Home Assistant Routing (accessible at hass.yourdomain.local)
+      - "traefik.http.routers.ha.rule=Host(`ha.homelab.iot`)"
+      - "traefik.http.routers.ha.entrypoints=websecure"
+      - "traefik.http.routers.ha.tls=true"
+      - "traefik.http.services.ha.loadbalancer.server.port=8123"
 
   x-esphome:
     container_name: esphome
@@ -16,7 +27,7 @@ services:
     restart: always
     privileged: true
     volumes:
-      - /opt/iot/esphome/config:/config
+      - /opt/homelab/esphome/config:/config
       - /etc/localtime:/etc/localtime:ro
     network_mode: host   # ESPHome dashboard port
     devices:
@@ -25,3 +36,10 @@ services:
     environment:
       - USERNAME=${esphome-username}
       - PASSWORD=${esphome-password}
+    labels:
+      - "traefik.enable=true"
+      # ESPHome Routing (accessible at esphome.yourdomain.local)
+      - "traefik.http.routers.esphome.rule=Host(`esphome.homelab.iot`)"
+      - "traefik.http.routers.esphome.entrypoints=websecure"
+      - "traefik.http.routers.esphome.tls=true"
+      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
