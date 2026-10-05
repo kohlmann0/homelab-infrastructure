@@ -1,0 +1,27 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80:80"     # HTTP entrypoint
+      - "443:443"   # HTTPS entrypoint
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Allows Traefik to auto-discover containers
+      - ./traefik-data:/etc/traefik                  # Stores Traefik dynamic configs if needed
+    command:
+      - "--api.dashboard=true" # Enables the web dashboard
+      - "--api.insecure=true"  # Allows access to dashboard without strict auth initially
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false" # Security best practice: explicitly expose containers
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    labels:
+      - "traefik.enable=true"
+      # Traefik Dashboard Route (accessible at traefik.yourdomain.local)
+      - "traefik.http.routers.traefik-dash.rule=Host(`traefik.homelab.iot`)"
+      - "traefik.http.routers.traefik-dash.entrypoints=websecure"
+      - "traefik.http.routers.traefik-dash.service=api@internal"
+      - "traefik.http.routers.traefik-dash.tls=true"
