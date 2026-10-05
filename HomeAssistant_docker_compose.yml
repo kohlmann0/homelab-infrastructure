@@ -1,0 +1,27 @@
+services:
+  x-homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    volumes:
+      - /opt/iot/homeassistant/config:/config
+      - /run/dbus:/run/dbus:ro
+      - /etc/localtime:/etc/localtime:ro
+    privileged: true
+    network_mode: host
+
+  x-esphome:
+    container_name: esphome
+    image: ghcr.io/esphome/esphome:stable
+    restart: always
+    privileged: true
+    volumes:
+      - /opt/iot/esphome/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    network_mode: host   # ESPHome dashboard port
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - USERNAME=${esphome-username}
+      - PASSWORD=${esphome-password}
