@@ -29,7 +29,3 @@ services:
       - "traefik.http.routers.traefik-dash.service=api@internal"
       - "traefik.http.routers.traefik-dash.tls=true"
 
-  whoami:
-    image: traefik/whoami
-    labels:
-      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
