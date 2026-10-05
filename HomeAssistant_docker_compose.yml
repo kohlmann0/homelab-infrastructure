@@ -14,7 +14,8 @@ services:
       - "traefik.http.routers.ha.rule=Host(`ha.homelab.iot`)"
       - "traefik.http.routers.ha.entrypoints=web"
       - "traefik.http.routers.ha.service=ha"
-      - "traefik.http.services.ha.loadbalancer.server.url=http://192.168.20.30:8123"
+      - "traefik.http.services.ha.loadbalancer.server.port=8123"
+      #- "traefik.http.services.ha.loadbalancer.server.url=http://192.168.20.30:8123"
 
   esphome:
     container_name: esphome
