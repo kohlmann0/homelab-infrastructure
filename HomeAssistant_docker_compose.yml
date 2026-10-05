@@ -17,8 +17,8 @@ services:
       #- "traefik.http.routers.ha.tls=true" #Only use if using HTTPS - while testing comment out
       - "traefik.http.services.ha.loadbalancer.server.port=8123"
       # Because homeassistant uses Network_mode:Host -- Use the scheme and urls entries below instead      
-      - "traefik.http.services.hass.loadbalancer.server.scheme=http"
-      - "traefik.http.services.hass.loadbalancer.servers.url=http://192.168.20.30:8123"
+      - "traefik.http.services.ha.loadbalancer.server.scheme=http"
+      - "traefik.http.services.ha.loadbalancer.servers.url=http://192.168.20.30:8123"
 
   x-esphome:
     container_name: esphome
