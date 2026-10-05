@@ -1,0 +1,15 @@
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer-data:/data
+    labels:
+      - "traefik.enable=true"
+      # Portainer Routing (accessible at portainer.yourdomain.local)
+      - "traefik.http.routers.portainer.rule=Host(`portainer.homelab.iot`)"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.tls=true"
+      # Portainer uses port 9000 internally for HTTP
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
