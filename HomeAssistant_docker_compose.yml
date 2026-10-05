@@ -11,14 +11,12 @@ services:
     network_mode: host
     labels:
       - "traefik.enable=true"
-      # Home Assistant Routing (accessible at hass.yourdomain.local)
+      # Router
       - "traefik.http.routers.ha.rule=Host(`ha.homelab.iot`)"
       - "traefik.http.routers.ha.entrypoints=web"
-      #- "traefik.http.routers.ha.tls=true" #Only use if using HTTPS - while testing comment out
-      - "traefik.http.services.ha.loadbalancer.server.port=8123"
-      # Because homeassistant uses Network_mode:Host -- Use the scheme and urls entries below instead      
-      - "traefik.http.services.ha.loadbalancer.server.scheme=http"
-      - "traefik.http.services.ha.loadbalancer.servers.url=http://192.168.20.30:8123"
+      - "traefik.http.routers.ha.service=ha"    
+      # Backend
+      - "traefik.http.services.ha.loadbalancer.server.url=http://192.168.20.30:8123"
 
   x-esphome:
     container_name: esphome
@@ -36,13 +34,11 @@ services:
       - USERNAME=${esphome-username}
       - PASSWORD=${esphome-password}
     labels:
-      - "traefik.enable=true"
-      # ESPHome Routing (accessible at esphome.yourdomain.local)
+      - "traefik.enable=true"    
+      # Router
       - "traefik.http.routers.esphome.rule=Host(`esphome.homelab.iot`)"
       - "traefik.http.routers.esphome.entrypoints=web"
-      #- "traefik.http.routers.esphome.tls=true" #Only use if using HTTPS - while testing comment out
-      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
-      # Because esphome uses Network_mode:Host -- Use the scheme and urls entries below as well
-      - "traefik.http.services.esphome.loadbalancer.server.scheme=http"
-      - "traefik.http.services.esphome.loadbalancer.servers.url=http://192.168.20.30:6052"
+      - "traefik.http.routers.esphome.service=esphome"    
+      # Backend
+      - "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.30:6052"
 
