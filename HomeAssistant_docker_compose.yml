@@ -13,7 +13,7 @@ services:
       - "traefik.enable=true"
       # Home Assistant Routing (accessible at hass.yourdomain.local)
       - "traefik.http.routers.ha.rule=Host(`ha.homelab.iot`)"
-      - "traefik.http.routers.ha.entrypoints=websecure"
+      - "traefik.http.routers.ha.entrypoints=web"
       - "traefik.http.routers.ha.tls=true"
       - "traefik.http.services.ha.loadbalancer.server.port=8123"
 
@@ -36,7 +36,7 @@ services:
       - "traefik.enable=true"
       # ESPHome Routing (accessible at esphome.yourdomain.local)
       - "traefik.http.routers.esphome.rule=Host(`esphome.homelab.iot`)"
-      - "traefik.http.routers.esphome.entrypoints=websecure"
+      - "traefik.http.routers.esphome.entrypoints=web"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.services.esphome.loadbalancer.server.port=6052"
 
