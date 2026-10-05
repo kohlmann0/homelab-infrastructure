@@ -4,7 +4,9 @@ services:
     container_name: traefik
     restart: unless-stopped
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges:true      
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "80:80"     # HTTP entrypoint
       - "443:443"   # HTTPS entrypoint
