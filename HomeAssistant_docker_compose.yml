@@ -42,5 +42,5 @@ services:
       # Backend            
       #- "traefik.http.services.ha.loadbalancer.server.url=http://host.docker.internal:6052"
       - "traefik.http.services.esphome.loadbalancer.server.port=6052"
-      - "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.30:6052"
+      - "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.130:6052"
 
