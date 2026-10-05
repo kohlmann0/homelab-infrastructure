@@ -38,6 +38,7 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.homelab.iot`)"
       - "traefik.http.routers.esphome.entrypoints=web"
       - "traefik.http.routers.esphome.service=esphome"    
-      # Backend
-      - "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.30:6052"
+      # Backend      
+      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
+      #- "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.30:6052"
 
