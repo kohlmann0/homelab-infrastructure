@@ -9,10 +9,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
     privileged: true
     network_mode: host
-    http:
-      use_x_forwarded_for: true
-      trusted_proxies:
-        - 172.16.0.0/12  # Standard Docker internal IP range
     labels:
       - "traefik.enable=true"
       # Home Assistant Routing (accessible at hass.yourdomain.local)
@@ -43,3 +39,9 @@ services:
       - "traefik.http.routers.esphome.entrypoints=websecure"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.services.esphome.loadbalancer.server.port=6052"
+
+      
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.16.0.0/12  # Standard Docker internal IP range
