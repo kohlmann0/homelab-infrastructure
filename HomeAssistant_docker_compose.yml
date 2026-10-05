@@ -1,5 +1,5 @@
 services:
-  x-homeassistant:
+  homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     restart: unless-stopped
@@ -11,14 +11,12 @@ services:
     network_mode: host
     labels:
       - "traefik.enable=true"
-      # Router
       - "traefik.http.routers.ha.rule=Host(`ha.homelab.iot`)"
       - "traefik.http.routers.ha.entrypoints=web"
-      - "traefik.http.routers.ha.service=ha"    
-      # Backend
+      - "traefik.http.routers.ha.service=ha"
       - "traefik.http.services.ha.loadbalancer.server.url=http://192.168.20.30:8123"
 
-  x-esphome:
+  esphome:
     container_name: esphome
     image: ghcr.io/esphome/esphome:stable
     restart: always
