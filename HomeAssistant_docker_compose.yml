@@ -31,8 +31,10 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
       - /dev/ttyUSB1:/dev/ttyUSB1
     environment:
-      - USERNAME=${esphome-username}
-      - PASSWORD=${esphome-password}
+      #- USERNAME=${esphome-username}
+      #- PASSWORD=${esphome-password}
+      - USERNAME=test
+      - PASSWORD=ChangeMe
     labels:
       - "traefik.enable=true"    
       # Router
