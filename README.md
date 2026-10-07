@@ -6,14 +6,14 @@ Project Structure:
 homelab/  
 ├── README.md                    # High-level overview  
 ├── docs/  
-│   ├── ARCHITECTURE.md          # Network + services + dependencies  
-│   ├── NETWORK.md               # IPs, VLANs, DNS, ports  
-│   ├── SERVICES.md              # Docker/Portainer stacks  
-│   ├── SECURITY.md              # Firewall, proxy, trusted proxies  
-│   ├── OPERATIONS.md            # How to deploy/restart/backup  
-│   └── TROUBLESHOOTING.md       # Known issues and solutions  
+│   &emsp;├── ARCHITECTURE.md          # Network + services + dependencies  
+│   &emsp;├── NETWORK.md               # IPs, VLANs, DNS, ports  
+│   &emsp;├── SERVICES.md              # Docker/Portainer stacks  
+│   &emsp;├── SECURITY.md              # Firewall, proxy, trusted proxies  
+│   &emsp;├── OPERATIONS.md            # How to deploy/restart/backup  
+│   &emsp;└── TROUBLESHOOTING.md       # Known issues and solutions  
 └── stacks/  
-    ├── traefik/  
-    ├── homeassistant/  
-    ├── esphome/  
-    └── portainer/  
+    &emsp;&emsp;├── traefik/  
+    &emsp;&emsp;├── homeassistant/  
+    &emsp;&emsp;├── esphome/  
+    &emsp;&emsp;└── portainer/  
