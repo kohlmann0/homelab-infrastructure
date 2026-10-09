@@ -60,3 +60,9 @@ services:
       - STREAM_TYPE=RTSP          # Standardizes stream to RTSP for Home Assistant compatibility
     volumes:
       - /opt/wyzebridge/config/tokens:/tokens
+    labels:
+      - "traefik.enable=true"    
+      # Router
+      - "traefik.http.routers.wyzebridge.rule=Host(`wyzebridge.homelab.iot`)"
+      - "traefik.http.routers.wyzebridge.entrypoints=web"
+      - "traefik.http.routers.wyzebridge.service=wyzebridge"  
