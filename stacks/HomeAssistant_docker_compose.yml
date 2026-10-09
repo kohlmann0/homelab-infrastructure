@@ -44,3 +44,19 @@ services:
       - "traefik.http.services.esphome.loadbalancer.server.port=6052"
       - "traefik.http.services.esphome.loadbalancer.server.url=http://192.168.20.130:6052"
 
+
+  wyze-bridge:
+    container_name: wyze-bridge
+    image: mrlt8/wyze-bridge:latest
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - WYZE_USER=${WYZE_USERNM}
+      - WYZE_PASSWORD=${WYZE_PASSWRD}
+      # Optional: If you use TOTP/Authenticator app for 2FA, uncomment the line below:
+      # - WYZE_TOTP=YOUR_TOTP_SECRET_KEY
+      - WB_IP=192.168.20.130      # Sets the IP address of the host machine for local streaming
+      - NET_MODE=LAN              # Forces local connection mode to the camera
+      - STREAM_TYPE=RTSP          # Standardizes stream to RTSP for Home Assistant compatibility
+    volumes:
+      - /opt/wyzebridge/config/tokens:/tokens
