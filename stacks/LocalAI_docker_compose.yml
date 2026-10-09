@@ -1,0 +1,23 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - opt/ollama/config:/root/.ollama
+    deploy:
+      resources:
+        limits:
+          memory: 3.2G
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ai.rule=Host(`ai.homelab.iot`)"
+      - "traefik.http.routers.ai.entrypoints=web"
+      - "traefik.http.routers.ai.service=ai"
+      #- "traefik.http.services.ha.loadbalancer.server.url=http://host.docker.internal:8123"
+      - "traefik.http.services.ai.loadbalancer.server.port=11434"
+
+volumes:
+  ollama_data:
