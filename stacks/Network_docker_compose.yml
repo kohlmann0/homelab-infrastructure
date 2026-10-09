@@ -13,7 +13,7 @@ services:
       - "8080:8080" # I think this is the dashboard??
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro # Allows Traefik to auto-discover containers
-      - /opt/traefik/config:/etc/traefik                  # Stores Traefik dynamic configs if needed
+      - /opt/homelab/traefik/config:/etc/traefik                  # Stores Traefik dynamic configs if needed
     command:
       - "--api.dashboard=true" # Enables the web dashboard
       - "--api.insecure=true"  # Allows access to dashboard without strict auth initially
