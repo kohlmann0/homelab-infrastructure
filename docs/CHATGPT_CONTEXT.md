@@ -1,6 +1,6 @@
 # Homelab ChatGPT Context
 
-**Last updated:** 2026-10-06  
+**Last updated:** 2026-10-09  
 **Purpose:** Authoritative quick-reference for future ChatGPT conversations about this homelab.
 
 > This file is intended to let ChatGPT understand the current homelab without reconstructing the entire conversation history.
@@ -22,15 +22,26 @@ The homelab is built around:
   - Current LAN IP: `192.168.20.130`
   - Wireless interface: `wlp3s0`
   - Ethernet interface `enp2s0` is currently disconnected
+- **Secondary Server: `robotlab.iot`**
+  - Same LAN as the main homelab network
+  - Current LAN IP: `192.168.20.140`
+  - Managed by the Portainer instance running on `homelab.iot` (`192.168.20.130`)
+  - Reserved for planned AI workloads and additional automation/edge services
 - **Docker**
 - **Portainer**
   - Used to deploy/manage Docker Compose stacks
   - Several stacks are deployed from Git repositories
+  - A Portainer instance on `homelab.iot` is also controlling the second server at `robotlab.iot`
 - **Traefik**
   - Reverse proxy
   - Docker provider
 - **Home Assistant**
 - **ESPHome**
+- **Wyze camera bridge**
+  - Used to bring a Wi‑Fi camera stream into Home Assistant via RTSP/bridge tooling
+- **LocalLama / LocalLLaMA placeholder**
+  - Planned AI container workload for the second server
+  - Placeholder has been added, but the container has not been started yet
 - Other homelab services may be added later.
 
 Current conceptual layout:
@@ -42,18 +53,29 @@ Current conceptual layout:
                             |
                      LAN 192.168.20.0/24
                             |
-                    Ubuntu Server
-                    192.168.20.130
-                            |
-                         Docker
-                            |
-              +-------------+-------------+
-              |             |             |
-           Traefik     Home Assistant   ESPHome
-           :80/:443        :8123          :6052
-              |
-              +---- Portainer
-              +---- other services
+              +---------+-------------------+
+              |                             |
+       homelab.iot                robotlab.iot
+       192.168.20.130              192.168.20.140
+              |                             |
+         Portainer (controls both hosts) 
+              |                             |
+              +---------+-------------------+
+                        |
+                     Docker
+                        |
+          +-------------+-------------+
+          |             |             |
+       Traefik     Home Assistant   ESPHome
+       :80/:443        :8123          :6052
+          |             |
+          +---- Portainer
+          +---- Wyze camera bridge
+          +---- other services
+
+                         Planned AI workload
+                               LocalLama
+                               robotlab.iot
 ```
 
 ---
@@ -64,10 +86,13 @@ Current conceptual layout:
 
 ```text
 Network: 192.168.20.0/24
-Ubuntu Server: 192.168.20.130
+Ubuntu Server (homelab.iot): 192.168.20.130
+Second server (robotlab.iot): 192.168.20.140
 ```
 
 Do **not** assume older references to `192.168.20.30` are current. That address was used during earlier troubleshooting but is not the Ubuntu server's current IP.
+
+The second server, `robotlab.iot`, is on the same LAN and is controlled by the Portainer instance running on `homelab.iot` at `192.168.20.130`.
 
 Ubuntu interfaces observed:
 
@@ -88,13 +113,14 @@ Docker bridge networks also exist in:
 
 ## Internal DNS
 
-UDM Pro provides internal DNS records pointing to the Ubuntu server:
+UDM Pro provides internal DNS records pointing to the primary Ubuntu server and the second server:
 
 ```text
 ha.homelab.iot        -> 192.168.20.130
 esphome.homelab.iot   -> 192.168.20.130
 portainer.homelab.iot -> 192.168.20.130
 traefik.homelab.iot   -> 192.168.20.130
+robotlab.iot          -> 192.168.20.140
 ```
 
 These hostnames are intended for LAN/internal use.
@@ -143,6 +169,8 @@ volumes:
 
 Portainer is used to manage Docker and deploy stacks.
 
+The main Portainer instance is running on `homelab.iot` (`192.168.20.130`) and is also controlling the second Docker host at `robotlab.iot` (`192.168.20.140`).
+
 Stacks may be deployed from Git repositories.
 
 This means:
@@ -169,6 +197,23 @@ frame-ancestors 'none'
 Therefore, embedding the Portainer UI in a Home Assistant iframe/card does not work normally.
 
 Preferred approach: use a normal link/button to open Portainer rather than weakening Portainer's CSP.
+
+---
+
+## Additional host and workload notes
+
+- **Secondary Docker host:** `robotlab.iot`
+  - IP: `192.168.20.140`
+  - Same LAN/subnet as the primary homelab network
+  - Managed by Portainer on `homelab.iot`
+- **Planned AI workload:** LocalLama / LocalLLaMA placeholder
+  - Intended for the second server
+  - Container placeholder is present, but the service has not been started yet
+- **Home Assistant camera input:** Wyze camera bridge
+  - Added as a Docker container for bringing a Wi‑Fi camera RTSP feed into Home Assistant
+  - Purpose is to stream a camera/RTSP source into Home Assistant for automations and viewing
+
+Do not assume the second host is already running the AI workload. The LocalLama placeholder exists, but the service itself is not yet active.
 
 ---
 
@@ -749,14 +794,23 @@ hostname -I
    - Correct Ubuntu IP is `192.168.20.130`.
    - Determine why ESPHome appears to work despite the old URL before changing it.
 
-2. **Traefik HTTPS**
+2. **robotlab.iot / second server orchestration**
+   - `robotlab.iot` is on the same LAN at `192.168.20.140`.
+   - It is managed by the Portainer instance on `homelab.iot` (`192.168.20.130`).
+   - The LocalLama placeholder has been added, but the container has not been started yet.
+
+3. **Wyze camera bridge integration**
+   - A Docker container for Wyze camera bridge has been added for RTSP/streaming integration into Home Assistant.
+   - Verify the bridge configuration and camera stream path is stable before expanding automations or exposing routes.
+
+4. **Traefik HTTPS**
    - HTTP routing is the current working baseline.
    - HTTPS/certificate architecture remains to be designed.
 
-3. **Traefik dashboard security**
+5. **Traefik dashboard security**
    - `api.insecure=true` / port 8080 should not remain exposed indefinitely.
 
-4. **Overall homelab defensive security**
+6. **Overall homelab defensive security**
    - User is interested in a defensive/white-hat AI security stack around:
      - UDM Pro
      - Ubuntu
