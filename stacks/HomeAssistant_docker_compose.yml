@@ -50,18 +50,27 @@ services:
     image: mrlt8/wyze-bridge:latest
     restart: unless-stopped
     network_mode: host
+    ports:
+      - 1935:1935 # RTMP
+      - 8554:8554 # RTSP
+      - 8888:8888 # HLS
+      - 8889:8889 #WebRTC
+      - 8189:8189/udp # WebRTC/ICE
+      - 5000:5000 # WEB-UI
     environment:
-      - WYZE_USER=${WYZE_USERNM}
+      # Required: Wyze Developer Portal Account Credentials and API Keys
+      - WYZE_EMAIL=${WYZE_USERNM}
       - WYZE_PASSWORD=${WYZE_PASSWRD}
-      # Optional: If you use TOTP/Authenticator app for 2FA, uncomment the line below:
-      # - WYZE_TOTP=YOUR_TOTP_SECRET_KEY
-      - WB_IP=192.168.20.130      # Sets the IP address of the host machine for local streaming
+      - API_ID=${WYZE_API_ID}
+      - API_KEY=${WYZE_API_KEY}
+
+      # WyzeBridge web interface settings
+      - WB_AUTH=False          # Turn off Authentication for now until I can figure out the RSTP stream issue with Home Assistant
+      # - WB_USERNAME=${WYZE_USERNM}    #Dashboard username for accessing the Wyze Bridge web interface     
+      # - WB_PASSWORD=${WYZE_PASSWRD}   #Dashboard Password for accessing the Wyze Bridge web interface
       #- NET_MODE=LAN              # Forces local connection mode to the camera
       - NET_MODE=ANY
-      - STREAM_TYPE=RTSP          # Standardizes stream to RTSP for Home Assistant compatibility
-      # - WB_USERNAME=${WYZE_USERNM}    #Dashboard username for accessing the Wyze Bridge web interface     
-      # - WB_PASSWORD=${WYZE_PASSWRD}   
-      - WB_AUTH=False          # Turn off Authentication for now until I can figure out the RSTP stream issue with Home Assistant
+      - WB_IP=192.168.20.130      # Sets the IP address of the host machine for local streaming
     volumes:
       - /opt/homelab/wyzebridge/config/tokens:/tokens
     labels:
@@ -69,4 +78,6 @@ services:
       # Router
       - "traefik.http.routers.wyzebridge.rule=Host(`wyzebridge.homelab.iot`)"
       - "traefik.http.routers.wyzebridge.entrypoints=web"
-      - "traefik.http.routers.wyzebridge.service=wyzebridge"  
+      - "traefik.http.routers.wyzebridge.service=wyzebridge" 
+      - "traefik.http.services.wyzebridge.loadbalancer.server.port=8554" 
+      - "traefik.http.services.wyzebridge.loadbalancer.server.url=http://192.168.20.130:8554"
