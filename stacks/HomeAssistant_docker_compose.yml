@@ -58,6 +58,8 @@ services:
       - WB_IP=192.168.20.130      # Sets the IP address of the host machine for local streaming
       - NET_MODE=LAN              # Forces local connection mode to the camera
       - STREAM_TYPE=RTSP          # Standardizes stream to RTSP for Home Assistant compatibility
+      - WB_USERNAME=${WYZE_USERNM}    #Dashboard username for accessing the Wyze Bridge web interface     
+      - WB_PASSWORD=${WYZE_PASSWRD}   
     volumes:
       - /opt/homelab/wyzebridge/config/tokens:/tokens
     labels:
