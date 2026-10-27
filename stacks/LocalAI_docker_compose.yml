@@ -16,7 +16,6 @@ services:
       - "traefik.http.routers.ai.rule=Host(`ai.robotlab.iot`)"
       - "traefik.http.routers.ai.entrypoints=web"
       - "traefik.http.routers.ai.service=ai"
-      #- "traefik.http.services.ha.loadbalancer.server.url=http://host.docker.internal:8123"
       - "traefik.http.services.ai.loadbalancer.server.port=11434"
 
 volumes:
